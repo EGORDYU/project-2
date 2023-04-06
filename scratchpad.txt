@@ -1,0 +1,12 @@
+USER MODEL
+_____________
+email: string -- unique in the database
+password: string -- hashed in the database
+
+sequelize model:create --name user --attributes email:string,password:string
+
+# if you want to add more columns for your p2:
+1. sequelzie db:migrate:undo:all -- remove user table in db
+2. options:
+    a. edit both the user model and user migration to add columns
+    b. rm models/user.js migration/<the user migration>.js then rerun the new model create command
