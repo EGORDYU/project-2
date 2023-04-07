@@ -11,16 +11,18 @@ My website will be a simple ask AI website. It will allow the user to ask the CH
 
 
 
-| Verb   | Url             | CRUD   | Description                                            | View       |
-| ------ | --------------- | ------ | ------------------------------------------------------ | ---------- |
-| GET    | /               | Read   | Home view                                              | Home       |
-| GET    | /question       | Read   | Question asking page                                   | question   |
-| GET    | /question/:id   | Read   | Specific question and its answers                      | question   |
-| POST   | /question       | Create | Add a new question                                     | question   |
-| GET    | /favourites     | Read   | Shows your favourites and your comments about them     | favourites |
-| PUT    | /favourites     | Update | Edit a comment under a favourite                       | favourites |
-| POST   | /favourites     | Create | Add a new favourite                                    | favourites |
-| DELETE | /favourites/:id | Delete | Delete a favourite                                     | favourites |
+| Verb   | Url                      | CRUD   | Description                                         | View            |
+| ------ | ------------------------ | ------ | --------------------------------------------------- | --------------- |
+| GET    | /                        | Read   | Home view                                           | Home            |
+| GET    | /conversations           | Read   | List all conversations                              | Conversations   |
+| GET    | /conversations/:id       | Read   | Retrieve a specific conversation and its responses  | Conversation    |
+| POST   | /conversations           | Create | Create a new conversation                           | Conversations   |
+| POST   | /conversations/:id       | Create | Add a new response to a conversation                | Conversation    |
+| GET    | /favorites               | Read   | List all user's favorites with comments             | Favorites       |
+| PUT    | /favorites/:id           | Update | Update a comment under a favorite                   | Favorites       |
+| POST   | /favorites               | Create | Add a new favorite                                  | Favorites       |
+| DELETE | /favorites/:id           | Delete | Delete a favorite                                   | Favorites       |
+
 
 
 

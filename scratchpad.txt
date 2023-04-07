@@ -10,3 +10,6 @@ sequelize model:create --name user --attributes email:string,password:string
 2. options:
     a. edit both the user model and user migration to add columns
     b. rm models/user.js migration/<the user migration>.js then rerun the new model create command
+
+
+    API_KEY=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

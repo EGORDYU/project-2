@@ -47,15 +47,15 @@
 //encryption
 //two way process where data is 'locked' in an encrypted string using a key and that key can remove the data from the string
 
-const cryptoJs  = require('crypto-js')
+// const cryptoJs  = require('crypto-js')
 
-const stringToEncrypt = 'hello I am a secret message'
+// const stringToEncrypt = 'hello I am a secret message'
 
-const encryptionKey = 'myKey'
+// const encryptionKey = 'myKey'
 
 
-//Advanced Encryption Standard
-const myEncryption = cryptoJs.AES.encrypt(stringToEncrypt,encryptionKey)
-console.log(myEncryption.toString())
-const decryptedMessage = cryptoJs.AES.decrypt(myEncryption.toString(), encryptionKey)
-console.log(decryptedMessage.toString(cryptoJs.enc.Utf8));
+// //Advanced Encryption Standard
+// const myEncryption = cryptoJs.AES.encrypt(stringToEncrypt,encryptionKey)
+// console.log(myEncryption.toString())
+// const decryptedMessage = cryptoJs.AES.decrypt(myEncryption.toString(), encryptionKey)
+// console.log(decryptedMessage.toString(cryptoJs.enc.Utf8));

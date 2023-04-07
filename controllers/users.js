@@ -1,6 +1,9 @@
 //required packages
 const express = require('express')
 const router = express.Router()
+const db = require('../models')
+const bcrypt = require('bcrypt')
+const cryptoJs = require('crypto-js')
 
 //mount routes on router
 
@@ -12,41 +15,101 @@ router.get('/new', (req,res) =>{
 })
 
 //POST /users -- CREATE a new user from the form @ GET /users/new
-router.post ('/', (req,res) => {
-
-    //do a find or create with the user's given email
-    //if the user's email returns as found -- don't let them sign up
-
-    //instead redirect them to the login page
-    //hash the user's password before we add it to the db
+router.post ('/', async (req,res) => {
+    try {
+        console.log(req.body)
+        //do a find or create with the user's given email
+        const [newUser, created] = await db.user.findOrCreate({
+            where:{
+                email:req.body.email
+            }
+        })
+        if(!created){
+                //if the user's email returns as found -- don't let them sign up
+                console.log('user account exists')
+                //instead redirect them to the login page
+                res.redirect('/users/login?message=Please login to your account to continue')
+        } else {
+            //hash the user's password before we add it to the db
+            const hashedPassed = bcrypt.hashSync(req.body.password, 12)
     //save the user in the db
+    newUser.password = hashedPassed
+    await newUser.save()
     // encrypt the logged in user's id
+    const encryptedPk = cryptoJs.AES.encrypt(newUser.id.toString(), process.env.ENC_KEY)
     //set encrypted id as a cookie
+    res.cookie('userId', encryptedPk.toString())
     //redirect user
+    res.redirect('/users/profile')
+        }
 
 
 
 
-    res.send('create a new user if they do not exist alread in the db, log a user in')
+    } catch(error){
+        console.log(error)
+        res.redirect('/')
+    }
+
+   
+
 })
 
 //GET /users/login --show route for a form that lets a user login
 router.get('/login', (req,res) =>{
-    res.send('show a form that lets the user log in')
+    console.log(req.query)
+    res.render('users/login.ejs', {
+        message: req.query.message ? req.query.message : null
+    })
 })
 //POST /users/login --authenticate a user's credentials
-router.post('/login',(req,res) =>{
-    res.send('verify credentials that are given by the user to login')
+router.post('/login',async (req,res) =>{
+    try {
+        //search for the user's email in the db
+        const foundUser = await db.user.findOne({
+            where: {
+                email:req.body.email
+            }
+        })
+        const failedLoginMessage = 'Incorrect email or password'
+        if(!foundUser) {
+            // if the user's email is not found -- do not let them login
+            res.redirect('/users/login?mesage=' + failedLoginMessage)
+        } else if (!bcrypt.compareSync(req.body.password, foundUser.password)){
+            console.log('incorrect password')
+            // if the user exists but they have the wrong passowrd -- do not let them login
+            res.redirect('/users/login?message=' + failedLoginMessage)
+        } else {
+            // if the user exists, they know the right password -- log them in
+            const encryptedPk = cryptoJs.AES.encrypt(foundUser.id.toString(), process.env.ENC_KEY)
+    //set encrypted id as a cookie
+    res.cookie('userId', encryptedPk.toString())
+    //redirect user
+    res.redirect('/users/profile')
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.redirect('/')
+    }
 })
 // GET /users/logout -- log out the current user
 router.get('/logout',(req,res)=>{
-    res.send('log a user out')
+    res.clearCookie('userId');
     res.redirect('/')
 })
 
 //GET /users/profile -- show authorized users their profile page (optional)
 router.get('/profile',(req,res) =>{
-    res.send('show the currently logged in user their personal profile page')
+    //if the user comes here and is not logged in -- they lack authorization
+    if(!res.locals.user){
+        res.redirect('/users/login?message=You are not authorized to view that resource. Please authenticate to continue')
+    } else {
+        
+        res.render('users/profile.ejs')
+    }
+    //redirect them to the login
+    //if they are allowed to be here show them their profile
 })
 //export the router instance
 
