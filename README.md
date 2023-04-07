@@ -11,14 +11,20 @@ My website will be a simple ask AI website. It will allow the user to ask the CH
 
 
 
-| Verb | Url          | CRUD | Description                                        | View       |
-|------|--------------|------|----------------------------------------------------|------------|
-| GET  | /            | Read | Home view                                          | Home       |
-| GET  | /question    | Read | Question asking page                               | Question   |
-| GET  | /question/:id| Read | Specific questions + shows answers                 | Question   |
-| POST | /question    | PUT  | Enter in the question                              | Question   |
-| GET  | /favourites  | Read | Shows your favourites and your comments about them | Favourites |
-| PUT  | /favourites  | PUT  | Edit a comment under a favourite                   | Favourites |
+| Verb   | Url             | CRUD   | Description                                            | View       |
+| ------ | --------------- | ------ | ------------------------------------------------------ | ---------- |
+| GET    | /               | Read   | Home view                                              | Home       |
+| GET    | /question       | Read   | Question asking page                                   | question   |
+| GET    | /question/:id   | Read   | Specific question and its answers                      | question   |
+| POST   | /question       | Create | Add a new question                                     | question   |
+| GET    | /favourites     | Read   | Shows your favourites and your comments about them     | favourites |
+| PUT    | /favourites     | Update | Edit a comment under a favourite                       | favourites |
+| POST   | /favourites     | Create | Add a new favourite                                    | favourites |
+| DELETE | /favourites/:id | Delete | Delete a favourite                                     | favourites |
+
+
+
+
 
 
 ## User Stories:
