@@ -63,6 +63,59 @@ app.get('/', (req, res) =>{
 app.use('/users', require('./controllers/users.js'))
 
 
+
+
+
+
+
+app.get('/', (req, res) => {
+
+});
+
+// List all conversations
+app.get('/conversations', (req, res) => {
+
+});
+
+
+app.get('/conversations/:id', (req, res) => {
+  const conversationId = req.params.id;
+
+});
+
+
+app.post('/conversations', (req, res) => {
+
+});
+
+
+app.post('/conversations/:id', (req, res) => {
+  const conversationId = req.params.id;
+
+});
+
+
+app.get('/responses', (req, res) => {
+
+});
+
+
+app.put('/responses/:id', (req, res) => {
+  const responseId = req.params.id;
+
+});
+
+
+app.post('/responses', (req, res) => {
+
+});
+
+
+app.delete('/responses/:id', (req, res) => {
+  const responseId = req.params.id;
+
+});
+
 //app.listen
 app.listen(PORT, () => {
     console.log(`authenticating users on port ${PORT}`)
