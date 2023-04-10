@@ -11,13 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       conversation.belongsTo(models.user, { foreignKey: 'userId' });
-      conversation.hasMany(models.response, { foreignKey: 'response_id' });
+      conversation.hasMany(models.response, { foreignKey: 'id' });
     }
   }
   conversation.init({
     userId: DataTypes.INTEGER,
-    date: DataTypes.STRING,
-    is_favourite: DataTypes.BOOLEAN,
+    prompt: DataTypes.TEXT,
+    is_favorite: DataTypes.BOOLEAN,
+    generated_text: DataTypes.TEXT,
   }, {
     sequelize,
     modelName: 'conversation',

@@ -13,10 +13,13 @@ module.exports = {
         type: Sequelize.TEXT
       },
       is_conversation: {
-        type: Sequelize.STRING
+        type: Sequelize.BOOLEAN
       },
-      conversationId: {
+      conversation_id: {
         type: Sequelize.INTEGER
+      },
+      message: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

@@ -1,24 +1,45 @@
 <%- include('../partials/header.ejs') %>
 
-<h1>Conversations</h1>
+<h1>Start a conversation</h1>
 
-<form action="/users/conversations" method="POST">
-    <label for="prompt">Prompt:</label>
+<form action="/users/conversation/<%= conversations.id %>" method="POST">
+    <label for="prompt">Start of conversation:</label>
     <input type="text" id="prompt" name="prompt" required>
     <br>
     <label for="maxTokens">Max Tokens:</label>
     <input type="number" id="maxTokens" name="maxTokens" min="1" max="1000" value="100">
     <br>
     <button type="submit">Generate</button>
+</form>
+
+<h1>Conversation Details</h1>
+
+<% conversations.forEach(c => { %>
+
+<div>
+  <h3><%= c.prompt %></h3>
+  <p><a href="/users/conversation/<%= c.id %>"><%= c.prompt %></a></p>
+  <ul>
+  <!--
+  <form action="/users/conversation/<%= c.id %>" method="POST">
+    <label for="response">Response:</label>
+    <textarea id="response" name="message" required></textarea>
+    <br>
+    <label for="isConversation">Is part of conversation:</label>
+    <select id="isConversation" name="isConversation" required>
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+    <br>
+    <label for="isFavourite">Is favourite:</label>
+    <input type="checkbox" id="isFavourite" name="isFavourite">
+    <br>
+    <button type="submit">Add Response</button>
   </form>
+-->
+</div>
 
+<% }) %>
 
-
-  <% conversations.forEach(conversation => { %>
-    <div>
-      <h3><%= conversation.prompt %></h3>
-      <p><%= conversation.generatedText %></p> <!-- Display generated text -->
-    </div>
-  <% }) %>
 
 <%- include('../partials/footer.ejs') %>

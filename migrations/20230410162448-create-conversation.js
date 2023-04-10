@@ -12,10 +12,13 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER
       },
-      date: {
-        type: Sequelize.STRING
+      prompt: {
+        type: Sequelize.TEXT
       },
-      is_favourite: {
+      generated_text: {
+        type: Sequelize.TEXT
+      },
+      is_favorite: {
         type: Sequelize.BOOLEAN
       },
       createdAt: {
