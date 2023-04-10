@@ -4,11 +4,14 @@ require('dotenv').config()
 const cookieParser = require('cookie-parser')
 const cryptoJs = require('crypto-js');
 const db = require('./models')
+const axios = require('axios');
+
 
 
 // app config
 const app = express()
 const PORT = process.env.PORT || 8000
+app.use(cookieParser());
 app.set('view engine', 'ejs')
 
 // middlewares
