@@ -24,9 +24,11 @@ router.get('/conversation/:id', async (req, res) => {
 // Start a new conversation
 router.get('/conversations', async (req, res) => {
   const userId = req.cookies.userId;
+  const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
   try {
     const conversations = await db.conversation.findAll(
       {
+        where: { userId: decryptedUserId },
         order: [["is_favorite","ASC"],['id', 'DESC']]
       }
     );
