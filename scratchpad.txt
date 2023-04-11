@@ -5,6 +5,25 @@ password: string -- hashed in the database
 
 sequelize model:create --name user --attributes email:string,password:string
 
+CONVERSATION MODEL
+
+______________
+
+FK userId: integer 
+date: string 
+
+sequelize model:create --name conversation --attributes userId:integer,date:string
+
+RESPONSE MODEL
+
+_______________
+
+FK conversationId: integer
+message: text
+is_conversation: string
+is_favourite: boolean
+
+
 # if you want to add more columns for your p2:
 1. sequelzie db:migrate:undo:all -- remove user table in db
 2. options:
@@ -12,3 +31,15 @@ sequelize model:create --name user --attributes email:string,password:string
     b. rm models/user.js migration/<the user migration>.js then rerun the new model create command
 
 
+  <h2>Comments</h2>
+  <ul>
+    <% comments.forEach(comment => { %>
+      <li><%= comment.text %></li>
+    <% }) %>
+  </ul>
+  <form action="/users/conversation/<%= conversation.id %>/comment" method="POST">
+    <label for="comment">Comment:</label>
+    <textarea id="comment" name="text" required></textarea>
+    <br>
+    <button type="submit">Add Comment</button>
+  </form>

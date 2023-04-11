@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   response.init({
     message: DataTypes.TEXT,
     is_conversation: DataTypes.STRING,
-    conversation_id: DataTypes.INTEGER
+    conversation_id: DataTypes.INTEGER,
+    comment:DataTypes.STRING
   }, {
     sequelize,
     modelName: 'response',

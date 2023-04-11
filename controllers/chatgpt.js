@@ -2,11 +2,13 @@ const express = require('express')
 const router = express.Router()
 const db = require('../models')
 const axios = require('axios');
+const methodOverride = require('method-override');
 require('dotenv').config();
 
 const cryptoJs = require('crypto-js')
 
 const apiKey = process.env.API_KEY;
+router.use(methodOverride('_method'));
 
 // List all conversations
 router.get('/conversation/:id', async (req, res) => {
@@ -24,25 +26,23 @@ router.get('/conversation/:id', async (req, res) => {
 // Start a new conversation
 router.get('/conversations', async (req, res) => {
   const userId = req.cookies.userId;
-  const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
   try {
+    const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
     const conversations = await db.conversation.findAll(
       {
         where: { userId: decryptedUserId },
         order: [["is_favorite","ASC"],['id', 'DESC']]
       }
     );
-    console.log(conversations); // Add this line to log the conversations to the console
     if(!userId){
       res.send('please login')
     } else {
       res.render('users/conversations', { conversations });
-
     }
   } catch (error) {
     console.error(error);
     console.error(error.message); // Add this line to log the error message to the console
-    res.status(500).send('Error retrieving conversations');
+    res.status(500).send('Please login to view conversations');
   }
 });
 
@@ -53,7 +53,7 @@ router.post('/conversation', (req, res) => {
   maxTokens = req.body.maxTokens; // default to 100 if not provided
   const userId = req.cookies.userId;
 
-  maxTokens = maxTokens? parseInt(maxTokens):100;
+  maxTokens = maxTokens? parseInt(maxTokens):1000;
 
   const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
     // if( !prompt ) prompt = "Alice in Wonderland";
@@ -81,8 +81,6 @@ router.post('/conversation', (req, res) => {
     const responseData = {
       message: prompt, // Save the prompt as the first response message
       is_conversation: 'true', // Indicate that this is the start of a new conversation
-      
-      is_favourite: false,
     };
     const conversationData = {
       userId: decryptedUserId,
@@ -91,6 +89,7 @@ router.post('/conversation', (req, res) => {
       is_favourite: false,
       date: new Date().toISOString()
     };
+
     const createdConversation = await db.conversation.create(conversationData);
     responseData.conversationId = createdConversation.id;
     await db.response.create(responseData); // Insert responseData into the database
@@ -103,5 +102,43 @@ router.post('/conversation', (req, res) => {
   });
 });
   
+// Add a comment to a conversation
+router.post('/conversation/:id/comments', async (req, res) => {
+  const conversationId = req.params.id;
+  const comment = req.body.comment;
+  const isFavourite = req.body.isFavourite;
+
+  try {
+    const newComment = await db.response.create({
+      comment: comment,
+      is_conversation: false,
+      conversation_id: conversationId,
+      is_favourite: false,
+    });
+
+    res.redirect(`/users/conversation/${conversationId}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error adding comment to conversation');
+  }
+});
+
+// Delete a conversation
+router.delete('/conversation/:id', async (req, res) => {
+  const conversationId = req.params.id;
+
+  try {
+    // Delete all responses associated with the conversation
+    await db.response.destroy({ where: { conversation_id: conversationId } });
+
+    // Delete the conversation itself
+    await db.conversation.destroy({ where: { id: conversationId } });
+
+    res.redirect('/users/conversations');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error deleting conversation');
+  }
+});
 
   module.exports = router

@@ -21,6 +21,9 @@ module.exports = {
       message: {
         type: Sequelize.TEXT
       },
+      comment: {
+        type: Sequelize.TEXT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -5,22 +5,17 @@
   <p><%= conversation.generated_text %></p> <!-- Display generated text -->
   <ul>
     <% responses.forEach(response => { %>
-      <li><%= response.message %></li>
+      <li><%= response.comment %></li>
     <% }) %>
   </ul>
-  <form action="/users/conversation/<%= conversation.id %>" method="POST">
-    <label for="response">Response:</label>
-    <textarea id="response" name="prompt" required></textarea>
+  <label for="isFavourite">Is favourite:</label>
+  <input type="checkbox" id="isFavourite" name="isFavourite">
+  <form action="/users/conversation/<%= conversation.id %>/comments" method="POST">
+    <label for="comment">Comment:</label>
+    <textarea id="comment" name="comment" required></textarea>
     <br>
-    <label for="isConversation">Is part of conversation:</label>
-    <select id="isConversation" name="isConversation" required>
-      <option value="true">Yes</option>
-      <option value="false">No</option>
-    </select>
-    <br>
-    <label for="isFavourite">Is favourite:</label>
-    <input type="checkbox" id="isFavourite" name="isFavourite">
-    <br>
-    <button type="submit">Add Response</button>
+    <button type="submit">Add Comment</button>
   </form>
+  <a href="/users/conversations"><button>Back to Conversations</button></a>
 </div>
+

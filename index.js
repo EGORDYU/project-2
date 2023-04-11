@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser')
 const cryptoJs = require('crypto-js');
 const db = require('./models')
 const axios = require('axios');
+const methodOverride = require('method-override');
+
 
 
 
@@ -13,6 +15,7 @@ const app = express()
 const PORT = process.env.PORT || 8000
 app.use(cookieParser());
 app.set('view engine', 'ejs')
+app.use(methodOverride('_method'));
 
 // middlewares
 //parse html form request obdies

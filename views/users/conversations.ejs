@@ -16,28 +16,14 @@
 
 <% conversations.forEach(c => { %>
 
-<div>
-  <h3><%= c.prompt %></h3>
-  <p><a href="/users/conversation/<%= c.id %>"><%= c.prompt %></a></p>
-  <ul>
-  <!--
-  <form action="/users/conversation/<%= c.id %>" method="POST">
-    <label for="response">Response:</label>
-    <textarea id="response" name="message" required></textarea>
-    <br>
-    <label for="isConversation">Is part of conversation:</label>
-    <select id="isConversation" name="isConversation" required>
-      <option value="true">Yes</option>
-      <option value="false">No</option>
-    </select>
-    <br>
-    <label for="isFavourite">Is favourite:</label>
-    <input type="checkbox" id="isFavourite" name="isFavourite">
-    <br>
-    <button type="submit">Add Response</button>
-  </form>
--->
-</div>
+  <div>
+    <h3><%= c.prompt %></h3>
+    <p><a href="/users/conversation/<%= c.id %>"><%= c.prompt %></a></p>
+    <form action="/users/conversation/<%= c.id %>?_method=DELETE" method="POST">
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit">Delete</button>
+    </form>
+  </div>
 
 <% }) %>
 
