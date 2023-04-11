@@ -8,8 +8,6 @@
       <li><%= response.comment %></li>
     <% }) %>
   </ul>
-  <label for="isFavourite">Is favourite:</label>
-  <input type="checkbox" id="isFavourite" name="isFavourite">
   <form action="/users/conversation/<%= conversation.id %>/comments" method="POST">
     <label for="comment">Comment:</label>
     <textarea id="comment" name="comment" required></textarea>
@@ -17,5 +15,17 @@
     <button type="submit">Add Comment</button>
   </form>
   <a href="/users/conversations"><button>Back to Conversations</button></a>
+
+
+  <label for="isFavourite">Is favorite:</label>
+<input type="checkbox" id="isFavourite" name="isFavorite" <%= conversation.is_favorite ? 'checked' : '' %>>
+<form>
+  <% if (conversation.is_favorite) { %>
+    <button type="submit" formaction="/users/conversation/<%= conversation.id %>/unfavorite" formmethod="POST">Unfavorite</button>
+  <% } else { %>
+    <button type="submit" formaction="/users/conversation/<%= conversation.id %>/favorite" formmethod="POST">Favorite</button>
+  <% } %>
+</form>
+
 </div>
 

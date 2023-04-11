@@ -12,13 +12,18 @@
     <button type="submit">Generate</button>
 </form>
 
-<h1>Conversation Details</h1>
+<h1>Conversations</h1>
 
 <% conversations.forEach(c => { %>
 
   <div>
-    <h3><%= c.prompt %></h3>
-    <p><a href="/users/conversation/<%= c.id %>"><%= c.prompt %></a></p>
+    <h3>
+      <%= c.prompt %>
+      <% if (c.is_favorite) { %>
+        ⭐️
+      <% } %>
+    </h3>
+    <p><a href="/users/conversation/<%= c.id %>">View conversation</a></p>
     <form action="/users/conversation/<%= c.id %>?_method=DELETE" method="POST">
       <input type="hidden" name="_method" value="DELETE">
       <button type="submit">Delete</button>

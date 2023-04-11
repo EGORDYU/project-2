@@ -141,4 +141,32 @@ router.delete('/conversation/:id', async (req, res) => {
   }
 });
 
+router.post('/conversation/:id/favorite', async (req, res) => {
+  const conversationId = req.params.id;
+
+  try {
+    const conversation = await db.conversation.findByPk(conversationId);
+    conversation.is_favorite = true;
+    await conversation.save();
+    res.redirect(`/users/conversation/${conversationId}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error marking conversation as favorite');
+  }
+});
+
+router.post('/conversation/:id/unfavorite', async (req, res) => {
+  const conversationId = req.params.id;
+
+  try {
+    const conversation = await db.conversation.findByPk(conversationId);
+    conversation.is_favorite = false;
+    await conversation.save();
+    res.redirect(`/users/conversation/${conversationId}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error marking conversation as unfavorite');
+  }
+});
+
   module.exports = router

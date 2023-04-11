@@ -15,7 +15,7 @@ const app = express()
 const PORT = process.env.PORT || 8000
 app.use(cookieParser());
 app.set('view engine', 'ejs')
-app.use(methodOverride('_method'));
+
 
 // middlewares
 //parse html form request obdies
