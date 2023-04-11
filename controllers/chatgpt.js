@@ -10,6 +10,7 @@ const apiKey = process.env.API_KEY;
 
 // List all conversations
 router.get('/conversation/:id', async (req, res) => {
+  
   try {
     const conversation = await db.conversation.findByPk(req.params.id);
     const responses = await db.response.findAll({ where: { conversation_id: conversation.id } });
@@ -22,6 +23,7 @@ router.get('/conversation/:id', async (req, res) => {
 
 // Start a new conversation
 router.get('/conversations', async (req, res) => {
+  const userId = req.cookies.userId;
   try {
     const conversations = await db.conversation.findAll(
       {
@@ -29,7 +31,12 @@ router.get('/conversations', async (req, res) => {
       }
     );
     console.log(conversations); // Add this line to log the conversations to the console
-    res.render('users/conversations', { conversations });
+    if(!userId){
+      res.send('please login')
+    } else {
+      res.render('users/conversations', { conversations });
+
+    }
   } catch (error) {
     console.error(error);
     console.error(error.message); // Add this line to log the error message to the console
@@ -72,6 +79,7 @@ router.post('/conversation', (req, res) => {
     const responseData = {
       message: prompt, // Save the prompt as the first response message
       is_conversation: 'true', // Indicate that this is the start of a new conversation
+      
       is_favourite: false,
     };
     const conversationData = {
