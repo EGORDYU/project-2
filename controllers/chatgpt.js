@@ -31,7 +31,7 @@ router.get('/conversations', async (req, res) => {
     const conversations = await db.conversation.findAll(
       {
         where: { userId: decryptedUserId },
-        order: [["is_favorite","ASC"],['id', 'DESC']]
+        order: [["is_favorite","DESC"],['id', 'DESC']]
       }
     );
     if(!userId){
@@ -86,7 +86,7 @@ router.post('/conversation', (req, res) => {
       userId: decryptedUserId,
       prompt: prompt,
       generated_text: generatedText,
-      is_favourite: false,
+      is_favorite: false,
       date: new Date().toISOString()
     };
 
@@ -160,7 +160,7 @@ router.post('/conversation/:id/unfavorite', async (req, res) => {
 
   try {
     const conversation = await db.conversation.findByPk(conversationId);
-    conversation.is_favorite = false;
+    conversation.is_favorite = req.body.isFavorite === undefined ? false : true;
     await conversation.save();
     res.redirect(`/users/conversation/${conversationId}`);
   } catch (error) {
