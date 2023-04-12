@@ -169,4 +169,84 @@ router.post('/conversation/:id/unfavorite', async (req, res) => {
   }
 });
 
+// Update a conversation
+router.put('/conversation/:id', async (req, res) => {
+  const conversationId = req.params.id;
+  const prompt = req.body.prompt;
+  const isFavorite = req.body.isFavorite;
+
+  try {
+    const conversation = await db.conversation.findByPk(conversationId);
+    if (conversation) {
+      conversation.prompt = prompt || conversation.prompt;
+      conversation.is_favorite = isFavorite !== undefined ? isFavorite : conversation.is_favorite;
+      await conversation.save();
+      res.redirect(`/users/conversation/${conversationId}`);
+    } else {
+      res.status(404).send('Conversation not found');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error updating conversation');
+  }
+});
+
+// Update a conversation
+router.post('/conversation/:id', async (req, res) => {
+  const conversationId = req.params.id;
+  const prompt = req.body.prompt;
+  const isFavorite = req.body.isFavorite;
+
+  try {
+    const conversation = await db.conversation.findByPk(conversationId);
+    if (conversation) {
+      const responseData = {
+        message: prompt, // Save the updated prompt as the first response message
+        is_conversation: 'true', // Indicate that this is the start of a new conversation
+      };
+
+      // Make API call to GPT API
+      axios.post('https://api.openai.com/v1/chat/completions', {
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "user",
+            content: conversation.prompt
+          }
+        ],
+        max_tokens: conversation.generated_text.length,
+        n: 1
+      }, 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+      })
+      .then(async response => {
+        const generatedText = response.data.choices[0].message.content;
+        conversation.prompt = conversation.prompt;
+        conversation.generated_text = generatedText;
+        conversation.is_favorite = isFavorite !== undefined ? isFavorite : conversation.is_favorite;
+        await conversation.save();
+        responseData.conversationId = conversation.id;
+        await db.response.create(responseData); // Insert responseData into the database
+        const updatedResponses = await db.response.findAll({ where: { conversation_id: conversation.id } });
+        res.render('users/conversation', { conversation, responses: updatedResponses });
+      })
+      .catch(error => {
+        console.error(error);
+        res.status(500).send('Error generating conversation '+error);
+      });
+    } else {
+      res.status(404).send('Conversation not found');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error updating conversation');
+  }
+});
+
+
+
   module.exports = router

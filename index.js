@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const cryptoJs = require('crypto-js');
 const db = require('./models')
 const axios = require('axios');
+const path = require('path');
 const methodOverride = require('method-override');
 
 
@@ -15,11 +16,14 @@ const app = express()
 const PORT = process.env.PORT || 8000
 app.use(cookieParser());
 app.set('view engine', 'ejs')
+app.use(express.static('public'));
+
 
 
 // middlewares
 //parse html form request obdies
 app.use(express.urlencoded({ extended: false }))
+app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
 //tells express to parse incoming cookies sent from the browser
 app.use(cookieParser())
 app.use((req, res, next) => {
@@ -68,6 +72,7 @@ app.get('/', (req, res) =>{
 
 app.use('/users', require('./controllers/users.js'))
 app.use('/users', require('./controllers/chatgpt.js'))
+app.use('/', require('./controllers/favorites.js'))
 
 
 

@@ -1,31 +1,47 @@
-<h1>Conversation Details</h1>
+<%- include('../partials/header.ejs') %>
+<% const email = user.email.split('@')[0]; %>
+<div class="container">
+  <h1>Conversation Details</h1>
 
-<div>
-  <h3><%= conversation.prompt %></h3>
-  <p><%= conversation.generated_text %></p> <!-- Display generated text -->
-  <ul>
-    <% responses.forEach(response => { %>
-      <li><%= response.comment %></li>
-    <% }) %>
-  </ul>
-  <form action="/users/conversation/<%= conversation.id %>/comments" method="POST">
-    <label for="comment">Comment:</label>
-    <textarea id="comment" name="comment" required></textarea>
-    <br>
-    <button type="submit">Add Comment</button>
-  </form>
-  <a href="/users/conversations"><button>Back to Conversations</button></a>
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title"><%= conversation.prompt %></h3>
+      <p class="card-text"><%= conversation.generated_text %></p> <!-- Display generated text -->
+      <ul>
+        <% responses.forEach(response => { %>
+          <li><%= email%> : <%= response.comment %></li>
+        <% }) %>
+      </ul>
+      <form action="/users/conversation/<%= conversation.id %>/comments" method="POST">
+        <div class="form-group">
+          <label for="comment">Comment:</label>
+          <textarea class="form-control" id="comment" name="comment" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+      </form>
+      <a href="/users/conversations"><button class="btn btn-secondary mt-2">Back to Conversations</button></a>
 
+      <form action="/users/conversation/<%= conversation.id %>" method="POST">
+        <input type="hidden" name="resubmit" value="true">
+        <button type="submit" class="btn btn-success mt-2">Resubmit Prompt</button>
+      </form>
+      
 
-  <label for="isFavourite">Is favorite:</label>
-<input type="checkbox" id="isFavourite" name="isFavorite" <%= conversation.is_favorite ? 'checked' : '' %>>
-<form>
-  <% if (conversation.is_favorite) { %>
-    <button type="submit" formaction="/users/conversation/<%= conversation.id %>/unfavorite" formmethod="POST">Unfavorite</button>
-  <% } else { %>
-    <button type="submit" formaction="/users/conversation/<%= conversation.id %>/favorite" formmethod="POST">Favorite</button>
-  <% } %>
-</form>
+      <form>
+        <div class="form-group form-check">
+          <input type="checkbox" class="form-check-input" id="isFavourite" name="isFavorite" <%= conversation.is_favorite ? 'checked' : '' %>>
+          <label class="form-check-label" for="isFavourite">Is favorite:</label>
+        </div>
+        <% if (conversation.is_favorite) { %>
+          <button type="submit" formaction="/users/conversation/<%= conversation.id %>/unfavorite" formmethod="POST" class="btn btn-warning">Unfavorite</button>
+        <% } else { %>
+          <button type="submit" formaction="/users/conversation/<%= conversation.id %>/favorite" formmethod="POST" class="btn btn-primary">Favorite</button>
+        <% } %>
+      </form>
+
+    </div>
+  </div>
 
 </div>
 
+<%- include('../partials/footer.ejs') %>
