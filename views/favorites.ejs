@@ -1,24 +1,28 @@
 <%- include('./partials/header.ejs') %>
 
-<!-- views/users/favorites.ejs -->
-<% conversations.forEach(c => { %>
+<div class="container">
+  <h1>Favorite Conversations</h1>
+  <hr>
 
-    <div>
-      <h3>
-        <%= c.prompt %>
-        <% if (c.is_favorite) { %>
-          ⭐️
-
-        </h3>
-        <p><a href="/users/conversation/<%= c.id %>">View conversation</a></p>
-        <form action="/users/conversation/<%= c.id %>?_method=DELETE" method="POST">
-          <input type="hidden" name="_method" value="DELETE">
-          <button type="submit">Delete</button>
-        </form>
+  <% conversations.forEach(c => { %>
+    <% if (c.is_favorite) { %>
+      <div class="card my-3">
+        <div class="card-body">
+          <h5 class="card-title" style="color: black;"><%= c.prompt %>&nbsp;<i class="bi bi-star-fill text-warning"></i></h5>
+          <p class="card-text"><a href="/users/conversation/<%= c.id %>">View Conversation</a></p>
+          <form action="/users/conversation/<%= c.id %>?_method=DELETE" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
       </div>
-        <% } %>
-     
-  
+    <% } %>
   <% }) %>
 
-  <%- include('./partials/footer.ejs') %>
+  <% if (conversations.every(c => !c.is_favorite)) { %>
+    <p style="color: black;">You have no favorite conversations yet.</p>
+  <% } %>
+
+</div>
+
+<%- include('./partials/footer.ejs') %>

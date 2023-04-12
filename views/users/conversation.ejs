@@ -5,16 +5,16 @@
 
   <div class="card">
     <div class="card-body">
-      <h3 class="card-title"><%= conversation.prompt %></h3>
-      <p class="card-text"><%= conversation.generated_text %></p> <!-- Display generated text -->
+      <h3 class="card-title" style="color: black;"><%= conversation.prompt %></h3>
+      <p class="card-text" style="color: black;"><%= conversation.generated_text %></p> <!-- Display generated text -->
       <ul>
         <% responses.forEach(response => { %>
-          <li><%= email%> : <%= response.comment %></li>
+          <li style="color: black;"><%= email%> : <%= response.comment %></li>
         <% }) %>
       </ul>
       <form action="/users/conversation/<%= conversation.id %>/comments" method="POST">
         <div class="form-group">
-          <label for="comment">Comment:</label>
+          <label for="comment" style="color: black;">Comment:</label>
           <textarea class="form-control" id="comment" name="comment" required></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Add Comment</button>
@@ -30,7 +30,7 @@
       <form>
         <div class="form-group form-check">
           <input type="checkbox" class="form-check-input" id="isFavourite" name="isFavorite" <%= conversation.is_favorite ? 'checked' : '' %>>
-          <label class="form-check-label" for="isFavourite">Is favorite:</label>
+          <label class="form-check-label" for="isFavourite" style="color: black;">Is favorite:</label>
         </div>
         <% if (conversation.is_favorite) { %>
           <button type="submit" formaction="/users/conversation/<%= conversation.id %>/unfavorite" formmethod="POST" class="btn btn-warning">Unfavorite</button>

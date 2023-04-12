@@ -2,6 +2,34 @@
 
 
 
+
+
+<script>
+    const darkModeSwitch = document.getElementById('dark-mode-switch');
+  
+    // Check if the dark mode cookie exists and set the darkMode variable accordingly
+    const darkModeCookie = document.cookie.split(';').find(cookie => cookie.trim().startsWith('darkMode='));
+    const darkMode = darkModeCookie ? true : false;
+  
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+      darkModeSwitch.checked = true;
+    }
+  
+    darkModeSwitch.addEventListener('change', () => {
+      if (darkModeSwitch.checked) {
+        document.body.classList.add('dark-mode');
+        // Store the state in a cookie that expires in 1 year
+        document.cookie = "darkMode=true; expires=" + new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toUTCString();
+      } else {
+        document.body.classList.remove('dark-mode');
+        // Delete the cookie
+        document.cookie = "darkMode=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      }
+    });
+  </script>
+
+
 <script src="/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>
