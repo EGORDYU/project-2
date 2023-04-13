@@ -55,6 +55,26 @@ router.get('/favorites', async (req, res) => {
     }
   });
   
+
+  router.put('/favorites/:id', async (req, res) => {
+    const conversationId = req.params.id;
+    const isFavorite = req.body.isFavorite;
+  
+    try {
+      const conversation = await db.conversation.findByPk(conversationId);
+      if (conversation) {
+        conversation.is_favorite = isFavorite !== undefined ? isFavorite : conversation.is_favorite;
+        await conversation.save();
+        res.redirect(`/users/favorites`);
+      } else {
+        res.status(404).send('Conversation not found');
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error updating conversation favorite status');
+    }
+  });
+
   // Unmark a conversation as favorite
   router.delete('/favorites/:id', async (req, res) => {
     const conversationId = req.params.id;

@@ -4,16 +4,20 @@
 
 
 
-    <form method="POST" action="/users">
-        <label for="email">email:</label>
-        <input type="email" name="email" id="email" required/>
-
-        <label for="password">password:</label>
-        <input type="password" name="password" id="password" required/>
-
-        <button type="submit">Sign Up</button>
-    </form>
-
+<form class="row g-3" method="POST" action="/users">
+    <div class="col-md-6 mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary">Sign up</button>
+    </div>
+  </form>
+  
 
 
 <%- include('../partials/footer.ejs') %>

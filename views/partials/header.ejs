@@ -9,15 +9,16 @@
     <style>
         /* Dark mode styles */
         body.dark-mode {
-          background-color: #222;
-          color: #ffffff;
-        }
+  background-color: #292929;
+  color: #ffffff;
+}
+
+.card.dark-mode {
+  background-color: #424242;
+  color: #ffffff;
+}
       </style>
 
-<div class="form-check form-switch">
-    <input class="form-check-input" type="checkbox" id="dark-mode-switch">
-    <label class="form-check-label" for="dark-mode-switch">Dark Mode</label>
-  </div>
 
 
     <title>User Auth</title>
@@ -25,22 +26,38 @@
 <body>
     
 
-    <nav>
-        <ul>
-            <!-- shown whether the user is logged in or out-->
-            <li><a href="/">Home</a></li>
-            <!-- shown when the user is logged in-->
-            <% if (user){ %>
-                <li><a href="/users/profile">Profile</a></li>
-                <li><a href="/users/logout">Logout</a></li>
-                <li><a href="/users/conversations">Conversations</a></li>
-                <li><a href="/favorites">Favorites</a></li>
-
-           <% } else { %>
-            <li><a href="/users/new">Sign up</a></li>
-            <li><a href="/users/login">Sign in</a></li>
-
-            <%} %>
-            <!-- shown when the user is logged out-->
-        </ul>
-    </nav>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">My Site</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse bg-dark" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <% if (user){ %>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/profile">Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/logout">Logout</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/conversations">Conversations</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/favorites">Favorites</a>
+              </li>
+              <% } else { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/new">Sign up</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/login">Sign in</a>
+              </li>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
+      

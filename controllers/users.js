@@ -94,10 +94,17 @@ router.post('/login',async (req,res) =>{
     }
 })
 // GET /users/logout -- log out the current user
-router.get('/logout',(req,res)=>{
+router.get('/logout', (req, res) => {
     res.clearCookie('userId');
-    res.redirect('/')
-})
+    res.clearCookie('darkMode');
+    
+    // Remove the "dark-mode" class from the body element
+
+    
+    res.redirect('/');
+  });
+  
+  
 
 //GET /users/profile -- show authorized users their profile page (optional)
 router.get('/profile',(req,res) =>{
