@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
   conversation.init({
     userId: DataTypes.INTEGER,
     prompt: DataTypes.TEXT,
-    is_favorite: DataTypes.BOOLEAN,
-    generated_text: DataTypes.TEXT,
+    is_favorite: DataTypes.BOOLEAN
+    // generated_text: DataTypes.TEXT,
   }, {
     sequelize,
     modelName: 'conversation',

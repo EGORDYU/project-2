@@ -15,9 +15,9 @@ module.exports = {
       prompt: {
         type: Sequelize.TEXT
       },
-      generated_text: {
-        type: Sequelize.TEXT
-      },
+      // generated_text: {
+      //   type: Sequelize.TEXT
+      // },
       is_favorite: {
         type: Sequelize.BOOLEAN
       },

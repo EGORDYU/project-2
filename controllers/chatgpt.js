@@ -16,7 +16,10 @@ router.get('/conversation/:id', async (req, res) => {
   try {
     const conversation = await db.conversation.findByPk(req.params.id);
     const responses = await db.response.findAll({ where: { conversation_id: conversation.id } });
-    res.render('users/conversation', { conversation, responses });
+
+    const users = await db.user.findAll();
+
+    res.render('users/conversation', { conversation, responses, users });
   } catch (error) {
     console.error(error);
     res.status(500).send('Error retrieving conversation '+error);
@@ -78,20 +81,24 @@ router.post('/conversation', (req, res) => {
   })
   .then(async response => {
     const generatedText = response.data.choices[0].message.content;
+
     const responseData = {
       message: prompt, // Save the prompt as the first response message
       is_conversation: 'true', // Indicate that this is the start of a new conversation
+      user_id: 0
     };
     const conversationData = {
       userId: decryptedUserId,
       prompt: prompt,
-      generated_text: generatedText,
+      // generated_text: generatedText,
       is_favorite: false,
       date: new Date().toISOString()
     };
 
     const createdConversation = await db.conversation.create(conversationData);
-    responseData.conversationId = createdConversation.id;
+
+    responseData.conversation_id = createdConversation.id;
+    responseData.comment = generatedText;
     await db.response.create(responseData); // Insert responseData into the database
     
     res.redirect(`/users/conversations`);
@@ -114,6 +121,7 @@ router.post('/conversation/:id/comments', async (req, res) => {
       is_conversation: false,
       conversation_id: conversationId,
       is_favourite: false,
+      user_id: cryptoJs.AES.decrypt(req.cookies.userId, process.env.ENC_KEY)
     });
 
     res.redirect(`/users/conversation/${conversationId}`);
@@ -201,8 +209,9 @@ router.post('/conversation/:id', async (req, res) => {
     const conversation = await db.conversation.findByPk(conversationId);
     if (conversation) {
       const responseData = {
-        message: prompt, // Save the updated prompt as the first response message
+        // message: prompt, // Save the updated prompt as the first response message
         is_conversation: 'true', // Indicate that this is the start of a new conversation
+        user_id: 0 // special user id for chatgpt
       };
 
       // Make API call to GPT API
@@ -214,7 +223,7 @@ router.post('/conversation/:id', async (req, res) => {
             content: conversation.prompt
           }
         ],
-        max_tokens: conversation.generated_text.length,
+        max_tokens: response.comment.length,
         n: 1
       }, 
       {
@@ -225,12 +234,17 @@ router.post('/conversation/:id', async (req, res) => {
       })
       .then(async response => {
         const generatedText = response.data.choices[0].message.content;
+
         conversation.prompt = conversation.prompt;
-        conversation.generated_text = generatedText;
+        // conversation.generated_text = generatedText;
         conversation.is_favorite = isFavorite !== undefined ? isFavorite : conversation.is_favorite;
         await conversation.save();
-        responseData.conversationId = conversation.id;
+
+        responseData.user_id = 0;
+        responseData.comment = generatedText;
+        responseData.conversation_id = conversation.id;
         await db.response.create(responseData); // Insert responseData into the database
+
         const updatedResponses = await db.response.findAll({ where: { conversation_id: conversation.id } });
         res.render('users/conversation', { conversation, responses: updatedResponses });
       })

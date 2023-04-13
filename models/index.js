@@ -41,3 +41,14 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;
+
+db.sequelize.sync().then(async () => {
+  const gpt = db.user.findByPk(0);
+  if( !gpt ) {
+    await db.user.create({
+      id: 0,
+      email: 'chatgpt@openai.com',
+      password: 'n/a'
+    });
+  }
+});

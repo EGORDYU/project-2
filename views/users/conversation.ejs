@@ -9,7 +9,17 @@
       <p class="card-text" ><%= conversation.generated_text %></p> <!-- Display generated text -->
       <ul>
         <% responses.forEach(response => { %>
-          <li ><%= email%> : <%= response.comment %></li>
+
+            <!-- <li ><%= response.id %></li> -->
+
+            <% users.forEach(user => { %>
+
+                <li >USER_ID: <%= response.user_id %> <USER: <%= user.id %></li> 
+
+                <% if (true && user.id == response.user_id) { %>
+                    <li ><%= user.email.split('@')[0] %> : <%= response.comment %></li>
+                <% } %>
+            <% }) %>    
         <% }) %>
       </ul>
       <form action="/users/conversation/<%= conversation.id %>/comments" method="POST">
