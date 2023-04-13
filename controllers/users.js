@@ -114,8 +114,8 @@ router.get('/profile',(req,res) =>{
     if(!res.locals.user){
         res.redirect('/users/login?message=You are not authorized to view that resource. Please authenticate to continue')
     } else {
-        
-        res.render('users/profile.ejs', { message: message });
+        const userId = res.locals.user.id;
+        res.render('users/profile.ejs', { message: message, userId: userId });
     }
     //redirect them to the login
     //if they are allowed to be here show them their profile

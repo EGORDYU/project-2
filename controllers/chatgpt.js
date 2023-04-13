@@ -28,12 +28,14 @@ router.get('/conversation/:id', async (req, res) => {
 
 // Start a new conversation
 router.get('/conversations', async (req, res) => {
-  const userId = req.cookies.userId;
+  const userId = res.locals.user? res.locals.user.id:0;
+  // const userId = req.cookies.userId;
+
   try {
-    const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
+    // const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
     const conversations = await db.conversation.findAll(
       {
-        where: { userId: decryptedUserId },
+        where: { userId: userId },
         order: [["is_favorite","DESC"],['id', 'DESC']]
       }
     );
@@ -54,11 +56,11 @@ router.post('/conversation', (req, res) => {
   // const conversationId = req.params.id;
   const prompt = req.body.prompt;
   maxTokens = req.body.maxTokens; // default to 100 if not provided
-  const userId = req.cookies.userId;
+  const userId = res.locals.user? res.locals.user.id:0;
 
   maxTokens = maxTokens? parseInt(maxTokens):1000;
 
-  const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
+  // const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
     // if( !prompt ) prompt = "Alice in Wonderland";
 
   // Make API call to GPT API
@@ -88,7 +90,7 @@ router.post('/conversation', (req, res) => {
       user_id: 0
     };
     const conversationData = {
-      userId: decryptedUserId,
+      userId: userId,
       prompt: prompt,
       // generated_text: generatedText,
       is_favorite: false,
@@ -115,13 +117,15 @@ router.post('/conversation/:id/comments', async (req, res) => {
   const comment = req.body.comment;
   const isFavourite = req.body.isFavourite;
 
+  const userId = res.locals.user? res.locals.user.id:0;
+  
   try {
     const newComment = await db.response.create({
       comment: comment,
       is_conversation: false,
       conversation_id: conversationId,
       is_favourite: false,
-      user_id: cryptoJs.AES.decrypt(req.cookies.userId, process.env.ENC_KEY)
+      user_id: userId
     });
 
     res.redirect(`/users/conversation/${conversationId}`);
