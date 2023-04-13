@@ -4,9 +4,10 @@ const router = express.Router()
 const db = require('../models')
 const bcrypt = require('bcrypt')
 const cryptoJs = require('crypto-js')
+const methodOverride = require('method-override');
 
 //mount routes on router
-
+router.use(methodOverride('_method'));
 
 //GET /users/new -- show route for a form that creates a new user
 //(sign up for the app)
@@ -108,16 +109,41 @@ router.get('/logout', (req, res) => {
 
 //GET /users/profile -- show authorized users their profile page (optional)
 router.get('/profile',(req,res) =>{
+    const message = req.query.message;
     //if the user comes here and is not logged in -- they lack authorization
     if(!res.locals.user){
         res.redirect('/users/login?message=You are not authorized to view that resource. Please authenticate to continue')
     } else {
         
-        res.render('users/profile.ejs')
+        res.render('users/profile.ejs', { message: message });
     }
     //redirect them to the login
     //if they are allowed to be here show them their profile
 })
 //export the router instance
+
+// PUT /users/change-password -- update the user's password
+router.put('/change-password', async (req, res) => {
+    try {
+      const userId = res.locals.user.id;
+      const currentUser = await db.user.findByPk(userId);
+  
+      if (!currentUser) {
+        res.redirect('/users/login?message=You are not authorized to view that resource. Please authenticate to continue');
+      } else if (!bcrypt.compareSync(req.body.currentPassword, currentUser.password)) {
+        res.redirect('/users/profile?message=Incorrect current password. Please try again.');
+      } else {
+        const hashedNewPassword = bcrypt.hashSync(req.body.newPassword, 12);
+        currentUser.password = hashedNewPassword;
+        await currentUser.save();
+        res.redirect('/users/profile?message=Password changed successfully.');
+      }
+    } catch (error) {
+      console.log(error);
+      res.redirect('/users/profile?message=There was an error while changing your password.');
+    }
+  });
+  
+  
 
 module.exports = router
