@@ -8,6 +8,12 @@ My website will be a simple ask AI website. It will allow the user to ask the CH
 ![alt text](./project2-wireframe.png)
 
 Installation: `npm i`
+  
+`psql then sequeqlize db:migrate` to migrate the tables
+  
+will need an .env file with `ENC_KEY` and `API_KEY`
+
+`ENC_KEY` can be anything while `API_KEY` will have to be taken from a paid key from chatGPT services.
 
 Website link: [https://gptsaves-deployment-project2.herokuapp.com/users/conversations]
 
