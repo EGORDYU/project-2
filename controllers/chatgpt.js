@@ -207,66 +207,48 @@ router.put('/conversation/:id', async (req, res) => {
 
 // Update a conversation
 router.post('/conversation/:id', async (req, res) => {
-  const conversationId = req.params.id;
-  const prompt = req.body.prompt;
-  const isFavorite = req.body.isFavorite;
-
   try {
+    const conversationId = req.params.id;
+    const prompt = req.body.prompt;
+    const isFavorite = req.body.isFavorite;
+
     const conversation = await db.conversation.findByPk(conversationId);
-    if (conversation) {
-      const responseData = {
-        // message: prompt, // Save the updated prompt as the first response message
-        is_conversation: 'true', // Indicate that this is the start of a new conversation
-        user_id: 0 // special user id for chatgpt
-      };
-
-      // Make API call to GPT API
-      axios.post('https://api.openai.com/v1/chat/completions', {
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "user",
-            content: conversation.prompt
-          }
-        ],
-        max_tokens: response.comment.length,
-        n: 1
-      }, 
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-        },
-      })
-      .then(async response => {
-        const generatedText = response.data.choices[0].message.content;
-
-        conversation.prompt = conversation.prompt;
-        // conversation.generated_text = generatedText;
-        conversation.is_favorite = isFavorite !== undefined ? isFavorite : conversation.is_favorite;
-        await conversation.save();
-
-        responseData.user_id = 0;
-        responseData.comment = generatedText;
-        responseData.conversation_id = conversation.id;
-        await db.response.create(responseData); // Insert responseData into the database
-
-        const updatedResponses = await db.response.findAll({ where: { conversation_id: conversation.id } });
-        res.render('users/conversation', { conversation, responses: updatedResponses });
-      })
-      .catch(error => {
-        console.error(error);
-        res.status(500).send('Error generating conversation '+error);
-      });
-    } else {
-      res.status(404).send('Conversation not found');
+    if (!conversation) {
+      return res.status(404).send('Conversation not found');
     }
+
+    const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: conversation.prompt }],
+      max_tokens: conversation.prompt.length,
+      n: 1
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+    });
+
+    const generatedText = response.data.choices[0].message.content;
+    conversation.prompt = conversation.prompt;
+    conversation.is_favorite = isFavorite !== undefined ? isFavorite : conversation.is_favorite;
+    await conversation.save();
+
+    const responseData = {
+      is_conversation: 'true',
+      user_id: 0,
+      conversation_id: conversation.id,
+      comment: generatedText
+    };
+    await db.response.create(responseData);
+
+    const updatedResponses = await db.response.findAll({ where: { conversation_id: conversation.id } });
+    res.render('users/conversation', { conversation, responses: updatedResponses });
   } catch (error) {
     console.error(error);
     res.status(500).send('Error updating conversation');
   }
 });
-
 
 
   module.exports = router
