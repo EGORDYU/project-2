@@ -15,7 +15,7 @@ will need an .env file with `ENC_KEY` and `API_KEY`
 
 `ENC_KEY` can be anything while `API_KEY` will have to be taken from a paid key from chatGPT services.
 
-Website link: [https://gptsaves-deployment-project2.herokuapp.com/users/conversations]
+Website link: [https://gptsaves-deployment-project2.herokuapp.com/]
 
 The approach I took was incorrect at first, I tried to implement the API while also building the website. I learned from this mistake and had to rebuild the website starting from the foundation and working with dummy data then implementing the A.I. I worked on it piece by piece being careful about tackling bugs as they came up. 
 
