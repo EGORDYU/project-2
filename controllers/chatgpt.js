@@ -103,7 +103,9 @@ router.post('/conversation', (req, res) => {
     responseData.comment = generatedText;
     await db.response.create(responseData); // Insert responseData into the database
     
-    res.redirect(`/users/conversations`);
+    await db.conversation.sync();
+
+    res.redirect(`/users/conversation/${createdConversation.id}`);
   })
   .catch(error => {
     console.error(error);
