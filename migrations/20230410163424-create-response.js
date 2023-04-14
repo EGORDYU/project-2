@@ -15,9 +15,6 @@ module.exports = {
       conversation_id: {
         type: Sequelize.INTEGER
       },
-      message: {
-        type: Sequelize.TEXT
-      },
       comment: {
         type: Sequelize.TEXT
       },
