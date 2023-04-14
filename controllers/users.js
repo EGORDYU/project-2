@@ -18,7 +18,6 @@ router.get('/new', (req,res) =>{
 //POST /users -- CREATE a new user from the form @ GET /users/new
 router.post ('/', async (req,res) => {
     try {
-        console.log(req.body)
         //do a find or create with the user's given email
         const [newUser, created] = await db.user.findOrCreate({
             where:{

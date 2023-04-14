@@ -9,9 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      message: {
-        type: Sequelize.TEXT
-      },
       is_conversation: {
         type: Sequelize.BOOLEAN
       },

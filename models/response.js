@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   response.init({
     is_conversation: DataTypes.STRING,
     conversation_id: DataTypes.INTEGER,
-    comment:DataTypes.STRING,
+    comment:DataTypes.TEXT,
     user_id:DataTypes.INTEGER
   }, {
     sequelize,
