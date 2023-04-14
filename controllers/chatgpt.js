@@ -211,7 +211,7 @@ router.post('/conversation/:id', async (req, res) => {
     const conversationId = req.params.id;
     const prompt = req.body.prompt;
     const isFavorite = req.body.isFavorite;
-
+    const users = await db.user.findAll();
     const conversation = await db.conversation.findByPk(conversationId);
     if (!conversation) {
       return res.status(404).send('Conversation not found');
@@ -220,7 +220,7 @@ router.post('/conversation/:id', async (req, res) => {
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: conversation.prompt }],
-      max_tokens: conversation.prompt.length,
+      max_tokens: 1000,
       n: 1
     }, {
       headers: {
@@ -243,12 +243,13 @@ router.post('/conversation/:id', async (req, res) => {
     await db.response.create(responseData);
 
     const updatedResponses = await db.response.findAll({ where: { conversation_id: conversation.id } });
-    res.render('users/conversation', { conversation, responses: updatedResponses });
+    res.render('users/conversation', { conversation, responses: updatedResponses, users });
   } catch (error) {
     console.error(error);
     res.status(500).send('Error updating conversation');
   }
 });
+
 
 
   module.exports = router
