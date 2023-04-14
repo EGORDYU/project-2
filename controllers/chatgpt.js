@@ -83,8 +83,6 @@ router.post('/conversation', (req, res) => {
   })
   .then(async response => {
     const generatedText = response.data.choices[0].message.content;
-    const createdConversation = await db.conversation.create(conversationData);
-
 
     const responseData = {
       message: prompt, // Save the prompt as the first response message
@@ -99,7 +97,7 @@ router.post('/conversation', (req, res) => {
       date: new Date().toISOString()
     };
 
-
+    const createdConversation = await db.conversation.create(conversationData);
 
     responseData.conversation_id = createdConversation.id;
     responseData.comment = generatedText;
