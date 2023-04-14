@@ -125,7 +125,7 @@ router.post('/conversation/:id/comments', async (req, res) => {
     const newComment = await db.response.create({
       comment: comment,
       is_conversation: false,
-      conversation_id: conversationId,
+      conversation_id: parseInt(conversationId),
       is_favourite: false,
       user_id: userId
     });
