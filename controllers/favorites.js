@@ -15,12 +15,13 @@ router.use(methodOverride('_method'));
 
 // List all favorite conversations
 router.get('/favorites', async (req, res) => {
-    const userId = req.cookies.userId;
+    const userId = res.locals.user? res.locals.user.id:0;
+
     try {
-      const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
+      // const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
       const conversations = await db.conversation.findAll(
         {
-          where: { userId: decryptedUserId, is_favorite: true },
+          where: { userId: userId, is_favorite: true },
           order: [['id', 'DESC']]
         }
       );
