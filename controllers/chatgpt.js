@@ -246,9 +246,11 @@ router.post('/conversation/:id', async (req, res) => {
     res.render('users/conversation', { conversation, responses: updatedResponses, users });
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error updating conversation');
+    res.status(500).send('Error updating conversation' + error );
   }
 });
+
+
 
 
 

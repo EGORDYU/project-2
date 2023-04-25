@@ -14,6 +14,7 @@ const methodOverride = require('method-override');
 // app config
 const app = express()
 const PORT = process.env.PORT || 8000
+const giphyApiKey = process.env.GIF_API_KEY;
 app.use(cookieParser());
 app.set('view engine', 'ejs')
 app.use(express.static('public'));
