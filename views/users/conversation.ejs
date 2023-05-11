@@ -5,7 +5,7 @@
 
   <div class="card">
     <div class="card-body">
-      <h3 class="card-title" ><%= conversation.prompt %></h3>
+      <h3 class="card-title" >Latest Prompt: <%= conversation.prompt %></h3>
       <p class="card-text" ><%= conversation.generated_text %></p> <!-- Display generated text -->
       <ul>
         <% responses.forEach(response => { %>
@@ -33,8 +33,10 @@
 
       <form action="/users/conversation/<%= conversation.id %>" method="POST">
         <input type="hidden" name="resubmit" value="true">
-        <button type="submit" class="btn btn-success mt-2">Resubmit Prompt</button>
-      </form>
+        <textarea name="newPrompt" placeholder="Enter your new question here"></textarea>
+        <button type="submit" class="btn btn-success mt-2">Submit New Comment</button>
+    </form>
+    
       
 
       <form>

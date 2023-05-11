@@ -183,7 +183,6 @@ router.post('/conversation/:id/unfavorite', async (req, res) => {
   }
 });
 
-// Update a conversation
 router.put('/conversation/:id', async (req, res) => {
   const conversationId = req.params.id;
   const prompt = req.body.prompt;
@@ -209,7 +208,7 @@ router.put('/conversation/:id', async (req, res) => {
 router.post('/conversation/:id', async (req, res) => {
   try {
     const conversationId = req.params.id;
-    const prompt = req.body.prompt;
+    const newPrompt = req.body.newPrompt;  // Access the new user input
     const isFavorite = req.body.isFavorite;
     const users = await db.user.findAll();
     const conversation = await db.conversation.findByPk(conversationId);
@@ -219,7 +218,7 @@ router.post('/conversation/:id', async (req, res) => {
 
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: conversation.prompt }],
+      messages: [{ role: "user", content: newPrompt }],  // Use the new user input here
       max_tokens: 1000,
       n: 1
     }, {
@@ -230,7 +229,7 @@ router.post('/conversation/:id', async (req, res) => {
     });
 
     const generatedText = response.data.choices[0].message.content;
-    conversation.prompt = conversation.prompt;
+    conversation.prompt = newPrompt;  // Update the conversation prompt to the new user input
     conversation.is_favorite = isFavorite !== undefined ? isFavorite : conversation.is_favorite;
     await conversation.save();
 
@@ -249,6 +248,7 @@ router.post('/conversation/:id', async (req, res) => {
     res.status(500).send('Error updating conversation' + error );
   }
 });
+
 
 
 
