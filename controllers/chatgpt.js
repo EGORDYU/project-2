@@ -232,7 +232,7 @@ router.post('/conversation/:id', async (req, res) => {
 });
 
 
-const generatedText = `ChatGPT : [Response to: ${newPrompt}] - ${response.data.choices[0].message.content}`;// Prepend the prompt to the response
+const generatedText = `[Response to: ${newPrompt}] - ${response.data.choices[0].message.content}`;// Prepend the prompt to the response
     conversation.prompt = newPrompt;  // Update the conversation prompt to the new user input
     conversation.is_favorite = isFavorite !== undefined ? isFavorite : conversation.is_favorite;
     await conversation.save();
