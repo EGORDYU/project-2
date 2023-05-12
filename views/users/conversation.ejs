@@ -17,7 +17,14 @@
                 <!-- <li >USER_ID: <%= response.user_id %> <USER: <%= user.id %></li> -->
 
                 <% if (true && user.id == response.user_id) { %>
-                    <li ><%= user.email.split('@')[0] %> : <%= response.comment %></li>
+                  <li>
+                    <%= user.email.split('@')[0] %> :
+<span style="color: white;">
+  <%- response.comment.replace(/\[(.*?)\]/g, '<span style="color: red;">[$1]</span>') %>
+</span>
+
+                    </span>
+                  </li>
                 <% } %>
             <% }) %>    
         <% }) %>
@@ -30,10 +37,12 @@
         <button type="submit" class="btn btn-primary">Add Comment</button>
       </form>
       <a href="/users/conversations"><button class="btn btn-secondary mt-2">Back to Conversations</button></a>
+      <div></div>
 
       <form action="/users/conversation/<%= conversation.id %>" method="POST">
         <input type="hidden" name="resubmit" value="true">
         <textarea name="newPrompt" placeholder="Enter your new question here"></textarea>
+        <div></div>
         <button type="submit" class="btn btn-success mt-2">Submit New Comment</button>
     </form>
     

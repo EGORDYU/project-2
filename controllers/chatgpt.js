@@ -82,7 +82,7 @@ router.post('/conversation', (req, res) => {
     },
   })
   .then(async response => {
-    const generatedText = response.data.choices[0].message.content;
+    const generatedText = `[Response to: ${prompt}] - ${response.data.choices[0].message.content}`;
 
     const responseData = {
       message: prompt, // Save the prompt as the first response message
@@ -217,18 +217,22 @@ router.post('/conversation/:id', async (req, res) => {
     }
 
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: newPrompt }],  // Use the new user input here
-      max_tokens: 1000,
-      n: 1
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-    });
+  model: "gpt-3.5-turbo",
+  messages: [
+    { role: "system", content: "This is a conversation with GPT-3.5-turbo." },
+    { role: "user", content: newPrompt }
+  ],
+  max_tokens: 1000,
+  n: 1
+}, {
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey}`,
+  },
+});
 
-    const generatedText = response.data.choices[0].message.content;
+
+const generatedText = `ChatGPT : [Response to: ${newPrompt}] - ${response.data.choices[0].message.content}`;// Prepend the prompt to the response
     conversation.prompt = newPrompt;  // Update the conversation prompt to the new user input
     conversation.is_favorite = isFavorite !== undefined ? isFavorite : conversation.is_favorite;
     await conversation.save();
@@ -239,6 +243,7 @@ router.post('/conversation/:id', async (req, res) => {
       conversation_id: conversation.id,
       comment: generatedText
     };
+    
     await db.response.create(responseData);
 
     const updatedResponses = await db.response.findAll({ where: { conversation_id: conversation.id } });
