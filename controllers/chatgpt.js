@@ -110,7 +110,7 @@ router.post('/conversation', (req, res) => {
   })
   .catch(error => {
     console.error(error);
-    res.status(500).send('Error generating conversation '+error);
+    res.status(429).send('Error generating conversation '+error);
   });
 });
   
