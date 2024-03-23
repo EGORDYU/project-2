@@ -62,18 +62,6 @@ router.post('/conversation', (req, res) => {
 
   // const decryptedUserId = cryptoJs.AES.decrypt(userId, process.env.ENC_KEY)
     // if( !prompt ) prompt = "Alice in Wonderland";
-    console.log('Axios request payload:', {
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      temperature: 0.7,
-      max_tokens: maxTokens,
-      n: 1
-    });
   // Make API call to GPT API
   axios.post('https://api.openai.com/v1/chat/completions', {
     model: "gpt-3.5-turbo",
@@ -83,7 +71,6 @@ router.post('/conversation', (req, res) => {
       content: prompt
       }
     ],
-    temperature: 0.7,
     max_tokens: maxTokens,
     n: 1
   }, 
