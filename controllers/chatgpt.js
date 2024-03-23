@@ -65,13 +65,14 @@ router.post('/conversation', (req, res) => {
 
   // Make API call to GPT API
   axios.post('https://api.openai.com/v1/chat/completions', {
-    model: "gpt-4",
+    model: "gpt-3.5-turbo",
     messages: [
       {
       role: "user",
       content: prompt
       }
     ],
+    temperature: 0.7,
     max_tokens: maxTokens,
     n: 1
   }, 
